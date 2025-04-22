@@ -5,3 +5,29 @@ Create an IAM User and set the following configurations.
     - `export AWS_SECRET_ACCESS_KEY=""`
 * Attach Policies to IAM User
     - `AmazonEC2FullAccess`
+
+### Creating an EC2 instance
+Terraform configuration to define a single AWS EC2 instance
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.16"
+    }
+  }
+
+  required_version = ">= 1.2.0"
+}
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-830c94e3" # us-west-2
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "ExampleAppServerInstance"
+  }
+}
+
+```
