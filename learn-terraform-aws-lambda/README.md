@@ -1,4 +1,7 @@
-# AWS Configuration
+# Learn Terraform Lambda + API Gateway
+Follow repo: [learn-terraform-lambda-api-gateway](https://github.com/hashicorp-education/learn-terraform-lambda-api-gateway)
+
+## AWS Configuration
 Create an IAM User and set the following configurations.
 * Get Access Keys and Set environment variables (Do not share, exposure, or commit to public domains)
     - `export AWS_ACCESS_KEY_ID=""`
@@ -31,3 +34,9 @@ resource "aws_instance" "app_server" {
 }
 
 ```
+
+### Potential Errors
+
+│ Error: Failed to query available provider packages
+
+Fix: `terraform init -upgrade`
