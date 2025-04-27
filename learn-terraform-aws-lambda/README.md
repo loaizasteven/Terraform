@@ -15,6 +15,12 @@ Create an IAM User and set the following configurations.
     - `AmazonEC2FullAccess`
     - `AmazonS3FullAccess`
 
+### AWS CLI
+
+After step (3) in [Terraform steps](#learn-terraform-lambda--api-gateway) use the AWS CLI to confirm contents in s3 bucket.
+```bash
+aws s3 ls $(terraform output -raw lambda_bucket_name)
+```
 ### Creating an EC2 instance
 Terraform configuration to define a single AWS EC2 instance
 
