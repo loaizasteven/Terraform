@@ -8,6 +8,7 @@ Create an IAM User and set the following configurations.
     - `export AWS_SECRET_ACCESS_KEY=""`
 * Attach Policies to IAM User
     - `AmazonEC2FullAccess`
+    - `AmazonS3FullAccess`
 
 ### Creating an EC2 instance
 Terraform configuration to define a single AWS EC2 instance
