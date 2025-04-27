@@ -40,5 +40,7 @@ resource "aws_s3_bucket_acl" "lambda_bucket" {
   depends_on = [aws_s3_bucket_ownership_controls.lambda_bucket]
 
   bucket = aws_s3_bucket.lambda_bucket.id
+  // The canned_acl is used to set the access control list for the bucket
+  // privaete means that only the bucket owner has access to the objects in the bucket
   acl    = "private"
 }
