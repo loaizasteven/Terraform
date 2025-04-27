@@ -23,6 +23,24 @@ Create an IAM User and set the following configurations.
     - `AmazonEC2FullAccess`
     - `AmazonS3FullAccess`
 
+## Terraform Files
+Details on each of the terraform files in the directory.
+
+### `output.tf` 
+The [outputs.tf](./outputs.tf) file in Terraform is used to define **output values** for a Terraform configuration. Output values allow you to display information about the resources created by your Terraform code after the `terraform apply` command is run (They can be accessed via cli with `terraform output -raw your-object-value-name`). These outputs are often used for:
+
+- **Displaying Resource Information**: Providing details about created resources, such as IDs, names, or ARNs, to the user.
+- **Passing Data Between Modules**: Sharing resource attributes between different Terraform modules.
+- **Integration with Other Tools**: Allowing external systems or scripts to retrieve resource information programmatically using terraform output.
+
+The [outputs.tf](./outputs.tf) file defines two outputs:
+
+`lambda_bucket_name`: Displays the name (ID) of the S3 bucket used to store the Lambda function's code.
+`function_name`: Displays the name of the AWS Lambda function.
+
+These outputs make it easier to reference or use these resource attributes after deployment.
+
+
 ### AWS CLI
 
 After step (3) in [Terraform steps](#learn-terraform-lambda--api-gateway) use the AWS CLI to confirm contents in s3 bucket.
