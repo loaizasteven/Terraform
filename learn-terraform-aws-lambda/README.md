@@ -1,6 +1,11 @@
 # Learn Terraform Lambda + API Gateway
 Follow repo: [learn-terraform-lambda-api-gateway](https://github.com/hashicorp-education/learn-terraform-lambda-api-gateway)
 
+Multiple steps in this tutorial:
+1. Random Name Generator
+2. Create S3 bucket to store the Lambda function code
+2. Use the `archive_file` data source to generate a zip archive and an `aws_s3_object` resource to upload the archive to your S3 bucket.
+
 ## AWS Configuration
 Create an IAM User and set the following configurations.
 * Get Access Keys and Set environment variables (Do not share, exposure, or commit to public domains)
