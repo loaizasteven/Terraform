@@ -1,8 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+// This file contains the Terraform configuration for the AWS Lambda function
+// and S3 bucket used to store the function code.
 terraform {
-
   cloud {
     workspaces {
       name = "learn-terraform-lambda-api-gateway"
