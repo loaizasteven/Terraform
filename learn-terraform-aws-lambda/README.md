@@ -4,7 +4,15 @@ Follow repo: [learn-terraform-lambda-api-gateway](https://github.com/hashicorp-e
 Multiple steps in this tutorial:
 1. Random Name Generator
 2. Create S3 bucket to store the Lambda function code
-2. Use the `archive_file` data source to generate a zip archive and an `aws_s3_object` resource to upload the archive to your S3 bucket.
+3. Use the `archive_file` data source to generate a zip archive and an `aws_s3_object` resource to upload the archive to your S3 bucket.
+4. Create lambda in aws. This configuration defines four resources:
+- - `aws_lambda_function.hello_world` configures the Lambda function to use the bucket object containing your function code. It also sets the runtime to `NodeJS`, and assigns the handler to the handler function defined in `hello.js`. The `source_code_hash` attribute will change whenever you update the code contained in the archive, which lets Lambda know that there is a new version of your code available. Finally, the resource specifies a role which grants the function permission to access AWS services and resources in your account.
+
+- - `aws_cloudwatch_log_group.hello_world` defines a log group to store log messages from your Lambda function for 30 days. By convention, Lambda stores logs in a group with the name `/aws/lambda/<Function Name>`.
+
+- - `aws_iam_role.lambda_exec` defines an IAM role that allows Lambda to access resources in your AWS account.
+
+- - `aws_iam_role_policy_attachment.lambda_policy` attaches a policy the IAM role. The `AWSLambdaBasicExecutionRole` is an AWS managed policy that allows your Lambda function to write to CloudWatch logs.
 
 ## AWS Configuration
 Create an IAM User and set the following configurations.
