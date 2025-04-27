@@ -47,6 +47,10 @@ After step (3) in [Terraform steps](#learn-terraform-lambda--api-gateway) use th
 ```bash
 aws s3 ls $(terraform output -raw lambda_bucket_name)
 ```
+
+Verify AWS User:
+
+`aws sts get-caller-identity`
 ### Creating an EC2 instance
 Terraform configuration to define a single AWS EC2 instance
 
