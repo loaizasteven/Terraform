@@ -44,3 +44,27 @@ resource "aws_s3_bucket_acl" "lambda_bucket" {
   // privaete means that only the bucket owner has access to the objects in the bucket
   acl    = "private"
 }
+
+// Zip the Lambda function code
+// The archive_file data source creates a zip file from the source_dir
+// The source_dir is the directory containing the Lambda function code
+// The output_path is the path to the zip file
+// The type is set to "zip" to create a zip file
+
+data "archive_file" "lambda_hello_world" {
+  type = "zip"
+
+  source_dir  = "${path.module}/hello-world"
+  output_path = "${path.module}/hello-world.zip"
+}
+
+// Upload the zip file to the S3 bucket
+resource "aws_s3_object" "lambda_hello_world" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key    = "hello-world.zip"
+  source = data.archive_file.lambda_hello_world.output_path
+  // The etag is used to identify the version of the object in S3
+  // The etag is a hash of the object data
+  etag = filemd5(data.archive_file.lambda_hello_world.output_path)
+}
