@@ -111,3 +111,12 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+// Clean up the local zip file after upload
+resource "null_resource" "cleanup_zip" {
+    depends_on = [aws_s3_object.lambda_hello_world]
+
+    provisioner "local-exec" {
+        command = "rm -f ${data.archive_file.lambda_hello_world.output_path}"
+    }
+}
