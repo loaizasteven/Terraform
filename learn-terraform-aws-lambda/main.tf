@@ -122,3 +122,78 @@ resource "null_resource" "cleanup_zip" {
         command = "rm -f ${data.archive_file.lambda_hello_world.output_path}"
     }
 }
+
+// Create an API Gateway to trigger the Lambda function
+// The aws_apigatewayv2_api resource creates an HTTP API Gateway
+// This is the main entry point for HTTP requests
+resource "aws_apigatewayv2_api" "lambda" {
+    name          = "serverless_lambda_gw"
+    protocol_type = "HTTP"
+}
+
+// Create a stage for the API Gateway
+// A stage is a named reference to a deployment of the API
+// This configuration enables automatic deployments and logging
+resource "aws_apigatewayv2_stage" "lambda" {
+    api_id = aws_apigatewayv2_api.lambda.id
+
+    name        = "serverless_lambda_stage"
+    auto_deploy = true
+
+    access_log_settings {
+        destination_arn = aws_cloudwatch_log_group.api_gw.arn
+
+        format = jsonencode({
+            requestId               = "$context.requestId"
+            sourceIp                = "$context.identity.sourceIp"
+            requestTime             = "$context.requestTime"
+            protocol                = "$context.protocol"
+            httpMethod              = "$context.httpMethod"
+            resourcePath            = "$context.resourcePath"
+            routeKey                = "$context.routeKey"
+            status                  = "$context.status"
+            responseLength          = "$context.responseLength"
+            integrationErrorMessage = "$context.integrationErrorMessage"
+            }
+        )
+    }
+}
+
+// Create an integration between the API Gateway and Lambda function
+// This defines how the API Gateway should interact with the Lambda function
+// AWS_PROXY integration type means the request is sent directly to Lambda
+resource "aws_apigatewayv2_integration" "hello_world" {
+    api_id = aws_apigatewayv2_api.lambda.id
+
+    integration_uri    = aws_lambda_function.hello_world.invoke_arn
+    integration_type   = "AWS_PROXY"
+    integration_method = "POST"
+}
+
+// Define the API route that triggers the Lambda function
+// This creates a GET /hello endpoint that will invoke the Lambda
+resource "aws_apigatewayv2_route" "hello_world" {
+    api_id = aws_apigatewayv2_api.lambda.id
+
+    route_key = "GET /hello"
+    target    = "integrations/${aws_apigatewayv2_integration.hello_world.id}"
+}
+
+// Create a CloudWatch log group for API Gateway logs
+// This enables logging for the API Gateway with 30-day retention
+resource "aws_cloudwatch_log_group" "api_gw" {
+    name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
+
+    retention_in_days = 30
+}
+
+// Grant API Gateway permission to invoke the Lambda function
+// This creates the necessary IAM permissions for the integration to work
+resource "aws_lambda_permission" "api_gw" {
+    statement_id  = "AllowExecutionFromAPIGateway"
+    action        = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.hello_world.function_name
+    principal     = "apigateway.amazonaws.com"
+
+    source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+}
