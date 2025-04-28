@@ -113,6 +113,8 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 }
 
 // Clean up the local zip file after upload
+// The null_resource is used to run a local command after the S3 object is created
+// The depends_on argument ensures that the command is run after the S3 object is created
 resource "null_resource" "cleanup_zip" {
     depends_on = [aws_s3_object.lambda_hello_world]
 
