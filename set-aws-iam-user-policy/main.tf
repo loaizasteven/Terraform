@@ -1,3 +1,8 @@
+provider "aws" {
+  region = "us-east-1"
+
+}
+
 // Set the IAM User policy for the user that invokes the terraform apply command
 resource "aws_iam_user_policy_attachment" "aws_terraform_lambda_policy" {
   user       = "aws-terraform"
